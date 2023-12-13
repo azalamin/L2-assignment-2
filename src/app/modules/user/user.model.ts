@@ -1,17 +1,20 @@
-import { Schema, model } from 'mongoose'
-import { TAddress, TFullName, TUser } from './user.interface'
+/* eslint-disable @typescript-eslint/no-this-alias */
+import bcrypt from "bcrypt";
+import { Schema, model } from "mongoose";
+import config from "../../config";
+import { TAddress, TFullName, TUser } from "./user.interface";
 
 const nameSchema = new Schema<TFullName>({
   firstName: {
     type: String,
-    required: [true, 'First name is required'],
+    required: [true, "First name is required"],
     minlength: 1,
   },
   lastName: {
     type: String,
-    required: [true, 'Last name is required'],
+    required: [true, "Last name is required"],
   },
-})
+});
 
 const addressSchema = new Schema<TAddress>({
   street: {
@@ -25,12 +28,12 @@ const addressSchema = new Schema<TAddress>({
     type: String,
     required: true,
   },
-})
+});
 
 const userSchema = new Schema<TUser>({
   userId: {
     type: Number,
-    required: [true, 'User id must be number and unique!'],
+    required: [true, "User id must be number and unique!"],
     unique: true,
   },
   userName: {
@@ -38,12 +41,13 @@ const userSchema = new Schema<TUser>({
     required: true,
     minlength: 3,
     unique: true,
+    lowercase: true,
     validate: {
       // Custom validator function for checking spaces
       validator: function (value: string) {
-        return !/\s/.test(value) // Returns true if there are no spaces
+        return !/\s/.test(value); // Returns true if there are no spaces
       },
-      message: 'Username must not contain any spaces',
+      message: "Username must not contain any spaces",
     },
   },
   password: {
@@ -55,7 +59,7 @@ const userSchema = new Schema<TUser>({
   age: Number,
   email: {
     type: String,
-    required: [true, 'Please give a valid email'],
+    required: [true, "Please give a valid email"],
     unique: true,
   },
   isActive: {
@@ -66,6 +70,23 @@ const userSchema = new Schema<TUser>({
     type: [String],
   },
   address: addressSchema,
-})
+});
 
-export const UserModel = model<TUser>('User', userSchema)
+// hashing password
+userSchema.pre("save", async function (next) {
+  const user = this;
+  user.password = await bcrypt.hash(
+    user.password,
+    Number(config.bcrypt_salt_round),
+  );
+  next();
+});
+
+userSchema.methods.toJSON = function () {
+  const userObject = this.toObject();
+  // Exclude the password field
+  delete userObject.password;
+  return userObject;
+};
+
+export const UserModel = model<TUser>("User", userSchema);
