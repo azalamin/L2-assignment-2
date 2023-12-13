@@ -21,7 +21,8 @@ const createUser = async (req: Request, res: Response) => {
       error: {
         code: 500,
         description:
-          'Please make sure email, username, and user id is unique. Try again!',
+          'Please make sure email, username(no space), and user id is unique. Try again!',
+        error,
       },
     })
   }

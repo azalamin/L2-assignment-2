@@ -38,6 +38,13 @@ const userSchema = new Schema<TUser>({
     required: true,
     minlength: 3,
     unique: true,
+    validate: {
+      // Custom validator function for checking spaces
+      validator: function (value: string) {
+        return !/\s/.test(value) // Returns true if there are no spaces
+      },
+      message: 'Username must not contain any spaces',
+    },
   },
   password: {
     type: String,
