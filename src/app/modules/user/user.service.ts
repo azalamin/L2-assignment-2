@@ -1,8 +1,7 @@
 import { TUser } from "./user.interface";
 import { UserModel } from "./user.model";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const createUser = async (userData: TUser): Promise<TUser | any> => {
+const createUser = async (userData: TUser): Promise<TUser> => {
   const result = await UserModel.create(userData);
   return result;
 };
