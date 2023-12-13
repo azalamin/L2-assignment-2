@@ -1,17 +1,13 @@
 import mongoose from "mongoose";
-import { app } from "./app";
+import app from "./app";
+import config from "./app/config";
 
-const port = 5000;
-
-// getting-started.js
 async function main() {
   try {
-    await mongoose.connect(
-      "mongodb+srv://tourstravel:rpHhjDWGgW3Q59rM@tours-travels.ast3kax.mongodb.net/order-management?retryWrites=true&w=majority",
-    );
+    await mongoose.connect(config.database_url);
 
-    app.listen(port, () => {
-      console.log(`Order Management app listening on port ${port}`);
+    app.listen(config.port, () => {
+      console.log(`Order Management app listening on port ${config.port}`);
     });
   } catch (error) {
     console.log(error);
