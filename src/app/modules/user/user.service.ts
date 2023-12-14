@@ -51,7 +51,6 @@ const deleteSingleUser = async (
 const addNewProduct = async (
   userId: string,
   orderData: TOrders,
-  // orderData: TOrders,
 ): Promise<TUser | null> => {
   const user = await UserModel.findById(userId);
   // if user not exists throw an error
@@ -66,8 +65,17 @@ const addNewProduct = async (
   }
 
   const result = await user.save();
-
   return result;
+};
+
+const getUserOrders = async (userId: string): Promise<TUser | null> => {
+  const result = await UserModel.findOne({ _id: userId });
+
+  if (result?.orders?.length) {
+    return result;
+  } else {
+    throw new Error("Orders not found");
+  }
 };
 
 export const userServices = {
@@ -77,4 +85,5 @@ export const userServices = {
   updateSingleUser,
   deleteSingleUser,
   addNewProduct,
+  getUserOrders,
 };

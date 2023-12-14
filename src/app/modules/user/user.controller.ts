@@ -145,11 +145,34 @@ const addNewProduct = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+const getUserOrders = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const userId = req.params.userId;
+    const result = await userServices.getUserOrders(userId);
+
+    res.status(200).json({
+      success: true,
+      message: "User fetched successfully!",
+      data: result?.orders,
+    });
+  } catch (error) {
+    res.status(404).json({
+      success: false,
+      message: "User not found",
+      error: {
+        code: 404,
+        description: "User not found!",
+      },
+    });
+  }
+};
+
 export const userController = {
   createUser,
   getAllUser,
   getSingleUser,
   updateSingleUser,
   deleteSingleUser,
-  addOrder: addNewProduct,
+  addNewProduct,
+  getUserOrders,
 };
