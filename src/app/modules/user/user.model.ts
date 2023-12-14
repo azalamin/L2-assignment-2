@@ -2,7 +2,7 @@
 import bcrypt from "bcrypt";
 import { Schema, model } from "mongoose";
 import config from "../../config";
-import { TAddress, TFullName, TUser } from "./user.interface";
+import { TAddress, TFullName, TOrders, TUser } from "./user.interface";
 
 const nameSchema = new Schema<TFullName>({
   firstName: {
@@ -72,6 +72,21 @@ const userSchema = new Schema<TUser>({
   address: addressSchema,
 });
 
+const orderSchema = new Schema<TOrders>({
+  productName: {
+    type: String,
+    required: [true, "Product name is required"],
+  },
+  quantity: {
+    type: Number,
+    required: [true, "Quantity is required"],
+  },
+  price: {
+    type: Number,
+    required: [true, "Price is required"],
+  },
+});
+
 // hashing password
 userSchema.pre("save", async function (next) {
   const user = this;
@@ -90,3 +105,4 @@ userSchema.methods.toJSON = function () {
 };
 
 export const UserModel = model<TUser>("User", userSchema);
+export const OrderModel = model<TOrders>("Order", orderSchema);

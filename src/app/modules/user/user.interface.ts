@@ -20,3 +20,9 @@ export type TUser = {
   hobbies: string[];
   address: TAddress;
 };
+
+export interface TOrders {
+  productName: string;
+  price: number;
+  quantity: number;
+}

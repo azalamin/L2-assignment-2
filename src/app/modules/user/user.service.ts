@@ -1,5 +1,5 @@
-import { TUser } from "./user.interface";
-import { UserModel } from "./user.model";
+import { TOrders, TUser } from "./user.interface";
+import { OrderModel, UserModel } from "./user.model";
 
 const createUser = async (userData: TUser): Promise<TUser> => {
   const result = await UserModel.create(userData);
@@ -47,10 +47,24 @@ const deleteSingleUser = async (
   return result;
 };
 
+const addNewProduct = async (
+  userId: string,
+  orderData: TOrders,
+  // orderData: TOrders,
+): Promise<TOrders | null> => {
+  const result = await OrderModel.findByIdAndUpdate(userId, orderData, {
+    upsert: true,
+    new: true,
+  });
+
+  return result;
+};
+
 export const userServices = {
   createUser,
   getAllUser,
   getSingleUser,
   updateSingleUser,
   deleteSingleUser,
+  addOrder: addNewProduct,
 };

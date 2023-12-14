@@ -1,7 +1,10 @@
 import { Request, Response } from "express";
 import { TUser } from "./user.interface";
 import { userServices } from "./user.service";
-import userZodValidationSchema from "./user.zod.validation";
+import {
+  orderZodValidationSchema,
+  userZodValidationSchema,
+} from "./user.zod.validation";
 
 const createUser = async (req: Request, res: Response) => {
   try {
@@ -118,10 +121,35 @@ const deleteSingleUser = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+const addNewProduct = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const userId = req.params.userId;
+    const orderData = req.body;
+    const validateOrderData = orderZodValidationSchema.parse(orderData);
+    const result = await userServices.addOrder(userId, validateOrderData);
+
+    res.status(200).json({
+      success: true,
+      message: "Order created successfully!",
+      data: result,
+    });
+  } catch (error) {
+    res.status(404).json({
+      success: false,
+      message: "User not found",
+      error: {
+        code: 404,
+        description: "User not found!",
+      },
+    });
+  }
+};
+
 export const userController = {
   createUser,
   getAllUser,
   getSingleUser,
   updateSingleUser,
   deleteSingleUser,
+  addOrder: addNewProduct,
 };
