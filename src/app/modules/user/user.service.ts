@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { TOrders, TUser } from "./user.interface";
 import { UserModel } from "./user.model";
 
@@ -78,6 +79,22 @@ const getUserOrders = async (userId: string): Promise<TUser | null> => {
   }
 };
 
+const getUserOrdersTotal = async (userId: string) => {
+  const result = await UserModel.aggregate([
+    { $match: { _id: new mongoose.Types.ObjectId(userId) } },
+    // Deconstruct the orders array
+    { $unwind: "$orders" },
+    {
+      $group: {
+        _id: "$_id",
+        // Calculate the total price
+        totalPrice: { $sum: "$orders.price" },
+      },
+    },
+  ]);
+  return result;
+};
+
 export const userServices = {
   createUser,
   getAllUser,
@@ -86,4 +103,5 @@ export const userServices = {
   deleteSingleUser,
   addNewProduct,
   getUserOrders,
+  getUserOrdersTotal,
 };
