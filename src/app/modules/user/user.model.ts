@@ -30,6 +30,21 @@ const addressSchema = new Schema<TAddress>({
   },
 });
 
+const orderSchema = new Schema<TOrders>({
+  productName: {
+    type: String,
+    // required: [true, "Product name is required"],
+  },
+  quantity: {
+    type: Number,
+    // required: [true, "Quantity is required"],
+  },
+  price: {
+    type: Number,
+    // required: [true, "Price is required"],
+  },
+});
+
 const userSchema = new Schema<TUser>({
   userId: {
     type: Number,
@@ -70,21 +85,7 @@ const userSchema = new Schema<TUser>({
     type: [String],
   },
   address: addressSchema,
-});
-
-const orderSchema = new Schema<TOrders>({
-  productName: {
-    type: String,
-    required: [true, "Product name is required"],
-  },
-  quantity: {
-    type: Number,
-    required: [true, "Quantity is required"],
-  },
-  price: {
-    type: Number,
-    required: [true, "Price is required"],
-  },
+  orders: [orderSchema],
 });
 
 // hashing password
@@ -105,4 +106,3 @@ userSchema.methods.toJSON = function () {
 };
 
 export const UserModel = model<TUser>("User", userSchema);
-export const OrderModel = model<TOrders>("Order", orderSchema);

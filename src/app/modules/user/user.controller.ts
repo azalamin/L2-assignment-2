@@ -126,12 +126,12 @@ const addNewProduct = async (req: Request, res: Response): Promise<void> => {
     const userId = req.params.userId;
     const orderData = req.body;
     const validateOrderData = orderZodValidationSchema.parse(orderData);
-    const result = await userServices.addOrder(userId, validateOrderData);
+    await userServices.addNewProduct(userId, validateOrderData);
 
     res.status(200).json({
       success: true,
       message: "Order created successfully!",
-      data: result,
+      data: null,
     });
   } catch (error) {
     res.status(404).json({

@@ -9,6 +9,12 @@ export type TAddress = {
   country: string;
 };
 
+export interface TOrders {
+  productName: string;
+  price: number;
+  quantity: number;
+}
+
 export type TUser = {
   userId: number;
   userName: string;
@@ -19,10 +25,5 @@ export type TUser = {
   isActive: boolean;
   hobbies: string[];
   address: TAddress;
+  orders?: TOrders[];
 };
-
-export interface TOrders {
-  productName: string;
-  price: number;
-  quantity: number;
-}

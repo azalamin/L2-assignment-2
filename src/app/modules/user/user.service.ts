@@ -1,5 +1,5 @@
 import { TOrders, TUser } from "./user.interface";
-import { OrderModel, UserModel } from "./user.model";
+import { UserModel } from "./user.model";
 
 const createUser = async (userData: TUser): Promise<TUser> => {
   const result = await UserModel.create(userData);
@@ -24,6 +24,7 @@ const getAllUser = async (): Promise<TUser[]> => {
 const getSingleUser = async (userId: string): Promise<TUser | null> => {
   const result = await UserModel.findById(userId, {
     _id: 0,
+    orders: 0,
   });
   return result;
 };
@@ -51,11 +52,20 @@ const addNewProduct = async (
   userId: string,
   orderData: TOrders,
   // orderData: TOrders,
-): Promise<TOrders | null> => {
-  const result = await OrderModel.findByIdAndUpdate(userId, orderData, {
-    upsert: true,
-    new: true,
-  });
+): Promise<TUser | null> => {
+  const user = await UserModel.findById(userId);
+  // if user not exists throw an error
+  if (!user) {
+    throw new Error("User not exists");
+  }
+
+  if (user.orders) {
+    user.orders.push(orderData);
+  } else {
+    user.orders = [orderData];
+  }
+
+  const result = await user.save();
 
   return result;
 };
@@ -66,5 +76,5 @@ export const userServices = {
   getSingleUser,
   updateSingleUser,
   deleteSingleUser,
-  addOrder: addNewProduct,
+  addNewProduct,
 };
