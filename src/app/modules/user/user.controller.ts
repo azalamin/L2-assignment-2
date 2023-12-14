@@ -57,7 +57,7 @@ const getAllUser = async (req: Request, res: Response): Promise<void> => {
 const getSingleUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = req.params.userId;
-    const result = await userServices.getSingleUser(userId);
+    const result = await userServices.getSingleUser(Number(userId));
 
     res.status(200).json({
       success: true,
@@ -80,7 +80,10 @@ const updateSingleUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = req.params.userId;
     const userData = req.body;
-    const result = await userServices.updateSingleUser(userId, userData);
+    const result = await userServices.updateSingleUser(
+      Number(userId),
+      userData,
+    );
 
     res.status(200).json({
       success: true,
@@ -102,7 +105,7 @@ const updateSingleUser = async (req: Request, res: Response): Promise<void> => {
 const deleteSingleUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = req.params.userId;
-    await userServices.deleteSingleUser(userId);
+    await userServices.deleteSingleUser(Number(userId));
 
     res.status(200).json({
       success: true,
@@ -126,7 +129,7 @@ const addNewProduct = async (req: Request, res: Response): Promise<void> => {
     const userId = req.params.userId;
     const orderData = req.body;
     const validateOrderData = orderZodValidationSchema.parse(orderData);
-    await userServices.addNewProduct(userId, validateOrderData);
+    await userServices.addNewProduct(Number(userId), validateOrderData);
 
     res.status(200).json({
       success: true,
@@ -148,7 +151,7 @@ const addNewProduct = async (req: Request, res: Response): Promise<void> => {
 const getUserOrders = async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = req.params.userId;
-    const result = await userServices.getUserOrders(userId);
+    const result = await userServices.getUserOrders(Number(userId));
 
     res.status(200).json({
       success: true,
@@ -173,7 +176,7 @@ const getUserOrdersTotal = async (
 ): Promise<void> => {
   try {
     const userId = req.params.userId;
-    const result = await userServices.getUserOrdersTotal(userId);
+    const result = await userServices.getUserOrdersTotal(Number(userId));
     res.status(200).json({
       success: true,
       message: "Total price calculated successfully!",

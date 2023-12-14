@@ -1,14 +1,17 @@
-import mongoose from "mongoose";
 import { TOrders, TUser } from "./user.interface";
-import { UserModel } from "./user.model";
+import { User } from "./user.model";
 
 const createUser = async (userData: TUser): Promise<TUser> => {
-  const result = await UserModel.create(userData);
+  const user = new User(userData);
+  if (await user.isUserExists(userData.userId)) {
+    throw new Error("User already exists");
+  }
+  const result = await user.save();
   return result;
 };
 
 const getAllUser = async (): Promise<TUser[]> => {
-  const result = await UserModel.find(
+  const result = await User.find(
     {},
     {
       userName: 1,
@@ -16,25 +19,27 @@ const getAllUser = async (): Promise<TUser[]> => {
       age: 1,
       email: 1,
       address: 1,
-      _id: 0,
     },
   );
   return result;
 };
 
-const getSingleUser = async (userId: string): Promise<TUser | null> => {
-  const result = await UserModel.findById(userId, {
-    _id: 0,
-    orders: 0,
-  });
+const getSingleUser = async (userId: number): Promise<TUser | null> => {
+  const result = await User.findOne(
+    { userId },
+    {
+      _id: 0,
+      orders: 0,
+    },
+  );
   return result;
 };
 
 const updateSingleUser = async (
-  userId: string,
+  userId: number,
   userData: TUser,
 ): Promise<TUser | null> => {
-  const result = await UserModel.findByIdAndUpdate(userId, userData, {
+  const result = await User.findOneAndUpdate({ userId }, userData, {
     new: true,
     runValidators: true,
   });
@@ -42,18 +47,18 @@ const updateSingleUser = async (
 };
 
 const deleteSingleUser = async (
-  userId: string,
+  userId: number,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): Promise<TUser | null | any> => {
-  const result = await UserModel.findByIdAndDelete(userId);
+  const result = await User.findOneAndDelete({ userId });
   return result;
 };
 
 const addNewProduct = async (
-  userId: string,
+  userId: number,
   orderData: TOrders,
 ): Promise<TUser | null> => {
-  const user = await UserModel.findById(userId);
+  const user = await User.findOne({ userId });
   // if user not exists throw an error
   if (!user) {
     throw new Error("User not exists");
@@ -69,8 +74,8 @@ const addNewProduct = async (
   return result;
 };
 
-const getUserOrders = async (userId: string): Promise<TUser | null> => {
-  const result = await UserModel.findOne({ _id: userId });
+const getUserOrders = async (userId: number): Promise<TUser | null> => {
+  const result = await User.findOne({ userId });
 
   if (result?.orders?.length) {
     return result;
@@ -79,14 +84,14 @@ const getUserOrders = async (userId: string): Promise<TUser | null> => {
   }
 };
 
-const getUserOrdersTotal = async (userId: string) => {
-  const result = await UserModel.aggregate([
-    { $match: { _id: new mongoose.Types.ObjectId(userId) } },
+const getUserOrdersTotal = async (userId: number) => {
+  const result = await User.aggregate([
+    { $match: { userId } },
     // Deconstruct the orders array
     { $unwind: "$orders" },
     {
       $group: {
-        _id: "$_id",
+        _id: "$userId",
         // Calculate the total price
         totalPrice: { $sum: "$orders.price" },
       },

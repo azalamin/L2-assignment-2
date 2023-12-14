@@ -2,7 +2,14 @@
 import bcrypt from "bcrypt";
 import { Schema, model } from "mongoose";
 import config from "../../config";
-import { TAddress, TFullName, TOrders, TUser } from "./user.interface";
+import {
+  TAddress,
+  TFullName,
+  TOrders,
+  TUser,
+  TUserMethods,
+  UserModel,
+} from "./user.interface";
 
 const nameSchema = new Schema<TFullName>({
   firstName: {
@@ -45,7 +52,7 @@ const orderSchema = new Schema<TOrders>({
   },
 });
 
-const userSchema = new Schema<TUser>({
+const userSchema = new Schema<TUser, UserModel, TUserMethods>({
   userId: {
     type: Number,
     required: [true, "User id must be number and unique!"],
@@ -88,6 +95,13 @@ const userSchema = new Schema<TUser>({
   orders: [orderSchema],
 });
 
+// check is user exists or not
+userSchema.methods.isUserExists = async function (userId) {
+  const existingUser = await User.findOne({ userId });
+
+  return existingUser;
+};
+
 // hashing password
 userSchema.pre("save", async function (next) {
   const user = this;
@@ -105,4 +119,4 @@ userSchema.methods.toJSON = function () {
   return userObject;
 };
 
-export const UserModel = model<TUser>("User", userSchema);
+export const User = model<TUser, UserModel>("User", userSchema);
