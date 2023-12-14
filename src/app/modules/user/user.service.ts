@@ -20,7 +20,36 @@ const getAllUser = async (): Promise<TUser[]> => {
   return result;
 };
 
+const getSingleUser = async (userId: string): Promise<TUser | null> => {
+  const result = await UserModel.findById(userId, {
+    _id: 0,
+  });
+  return result;
+};
+
+const updateSingleUser = async (
+  userId: string,
+  userData: TUser,
+): Promise<TUser | null> => {
+  const result = await UserModel.findByIdAndUpdate(userId, userData, {
+    new: true,
+    runValidators: true,
+  });
+  return result;
+};
+
+const deleteSingleUser = async (
+  userId: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+): Promise<TUser | null | any> => {
+  const result = await UserModel.findByIdAndDelete(userId);
+  return result;
+};
+
 export const userServices = {
   createUser,
   getAllUser,
+  getSingleUser,
+  updateSingleUser,
+  deleteSingleUser,
 };

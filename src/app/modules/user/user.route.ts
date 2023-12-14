@@ -5,5 +5,8 @@ const route = express.Router();
 
 route.post("/", userController.createUser);
 route.get("/", userController.getAllUser);
+route.get("/:userId", userController.getSingleUser);
+route.put("/:userId", userController.updateSingleUser);
+route.delete("/:userId", userController.deleteSingleUser);
 
 export const userRoutes = route;

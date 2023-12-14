@@ -82,9 +82,9 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
+// Exclude the password field
 userSchema.methods.toJSON = function () {
   const userObject = this.toObject();
-  // Exclude the password field
   delete userObject.password;
   return userObject;
 };
