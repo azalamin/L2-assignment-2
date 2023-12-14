@@ -15,6 +15,7 @@ const getAllUser = async (): Promise<TUser[]> => {
       age: 1,
       email: 1,
       address: 1,
+      _id: 0,
     },
   );
   return result;
