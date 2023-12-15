@@ -65,26 +65,6 @@ const deleteSingleUser = async (
   return result;
 };
 
-// const addNewProduct = async (
-//   userId: number,
-//   orderData: TOrders,
-// ): Promise<TUser | null> => {
-//   const user = new User();
-//   // if user not exists throw an error
-//   if (!(await user.isUserExists(userId))) {
-//     throw new Error("User not exists");
-//   } else {
-//     if (user.orders) {
-//       user.orders.push(orderData);
-//     } else {
-//       user.orders = [orderData];
-//     }
-//   }
-
-//   const result = await user.save();
-//   return result;
-// };
-
 const addNewProduct = async (
   userId: number,
   orderData: TOrders,
