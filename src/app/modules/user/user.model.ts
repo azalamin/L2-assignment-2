@@ -113,4 +113,12 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
+// Exclude password in response
+userSchema.methods.toJSON = function () {
+  const userObject = this.toObject();
+  delete userObject.password;
+  delete userObject.orders;
+  return userObject;
+};
+
 export const User = model<TUser, UserModel>("User", userSchema);
