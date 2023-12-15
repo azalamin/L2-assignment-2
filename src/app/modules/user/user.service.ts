@@ -57,10 +57,13 @@ const updateSingleUser = async (
   return result;
 };
 
-const deleteSingleUser = async (
-  userId: number,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): Promise<TUser | null | any> => {
+const deleteSingleUser = async (userId: number): Promise<TUser | null> => {
+  // check user exist or not
+  const user = new User();
+  if (!(await user.isUserExists(userId))) {
+    throw new Error("User not found");
+  }
+
   const result = await User.findOneAndDelete({ userId });
   return result;
 };
@@ -91,8 +94,13 @@ const addNewProduct = async (
 };
 
 const getUserOrders = async (userId: number): Promise<TUser | null> => {
-  const result = await User.findOne({ userId });
+  // check user exist or not
+  const user = new User();
+  if (!(await user.isUserExists(userId))) {
+    throw new Error("User not found");
+  }
 
+  const result = await User.findOne({ userId });
   if (result?.orders?.length) {
     return result;
   } else {
@@ -101,6 +109,12 @@ const getUserOrders = async (userId: number): Promise<TUser | null> => {
 };
 
 const getUserOrdersTotal = async (userId: number) => {
+  // check user exist or not
+  const user = new User();
+  if (!(await user.isUserExists(userId))) {
+    throw new Error("User not found");
+  }
+
   const result = await User.aggregate([
     { $match: { userId } },
     // Deconstruct the orders array
