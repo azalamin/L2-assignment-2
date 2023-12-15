@@ -25,6 +25,11 @@ const getAllUser = async (): Promise<TUser[]> => {
 };
 
 const getSingleUser = async (userId: number): Promise<TUser | null> => {
+  // check user exist or not
+  const user = new User();
+  if (!(await user.isUserExists(userId))) {
+    throw new Error("User not found");
+  }
   const result = await User.findOne(
     { userId },
     {
@@ -39,10 +44,16 @@ const updateSingleUser = async (
   userId: number,
   userData: TUser,
 ): Promise<TUser | null> => {
+  // check user exist or not
+  const user = new User();
+  if (!(await user.isUserExists(userId))) {
+    throw new Error("User not found");
+  }
+
   const result = await User.findOneAndUpdate({ userId }, userData, {
     new: true,
     runValidators: true,
-  });
+  }).select({ orders: 0 });
   return result;
 };
 
@@ -54,23 +65,48 @@ const deleteSingleUser = async (
   return result;
 };
 
+// const addNewProduct = async (
+//   userId: number,
+//   orderData: TOrders,
+// ): Promise<TUser | null> => {
+//   const user = new User();
+//   // if user not exists throw an error
+//   if (!(await user.isUserExists(userId))) {
+//     throw new Error("User not exists");
+//   } else {
+//     if (user.orders) {
+//       user.orders.push(orderData);
+//     } else {
+//       user.orders = [orderData];
+//     }
+//   }
+
+//   const result = await user.save();
+//   return result;
+// };
+
 const addNewProduct = async (
   userId: number,
   orderData: TOrders,
 ): Promise<TUser | null> => {
-  const user = await User.findOne({ userId });
-  // if user not exists throw an error
-  if (!user) {
-    throw new Error("User not exists");
+  // check user exist or not
+  const user = new User();
+  if (!(await user.isUserExists(userId))) {
+    throw new Error("User not found");
   }
 
-  if (user.orders) {
-    user.orders.push(orderData);
-  } else {
-    user.orders = [orderData];
-  }
+  const result = await User.findOneAndUpdate(
+    { userId },
+    {
+      $push: {
+        orders: orderData,
+      },
+    },
+    {
+      new: true,
+    },
+  );
 
-  const result = await user.save();
   return result;
 };
 

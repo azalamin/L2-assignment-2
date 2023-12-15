@@ -76,6 +76,7 @@ const userSchema = new Schema<TUser, UserModel, TUserMethods>({
     type: String,
     required: true,
     minlength: 6,
+    select: false,
   },
   fullName: nameSchema,
   age: Number,
@@ -112,11 +113,11 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-// Exclude the password field
-userSchema.methods.toJSON = function () {
-  const userObject = this.toObject();
-  delete userObject.password;
-  return userObject;
-};
+// // Exclude the password field
+// userSchema.methods.toJSON = function () {
+//   const userObject = this.toObject();
+//   delete userObject.password;
+//   return userObject;
+// };
 
 export const User = model<TUser, UserModel>("User", userSchema);
