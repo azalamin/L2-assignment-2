@@ -12,7 +12,11 @@ app.use(cors());
 app.use("/api/users", userRoutes);
 
 app.get("/", (req: Request, res: Response) => {
-  res.send("Welcome to Order Management");
+  res.status(200).json({
+    success: true,
+    message: "Order Management Servers is Running",
+    description: "Welcome to the order management",
+  });
 });
 
 export default app;
