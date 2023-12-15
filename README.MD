@@ -14,9 +14,6 @@ This is just a simple Order Management application. A user can create, read, upd
 - [Project Structure](#project-structure)
 - [Usage](#usage)
 - [API Documentation](#api-documentation)
-- [Testing](#testing)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## Introduction
 
@@ -35,8 +32,8 @@ Follow these instructions to get the project up and running on your local machin
 
 ### Prerequisites
 
-- [Node.js](https://nodejs.org/) (version x.x.x)
-- [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/)
+- [Node.js](https://nodejs.org/) (latest version)
+- [npm](https://www.npmjs.com/)
 
 ### Installation
 
@@ -49,7 +46,7 @@ git clone https://github.com/azalamin/L2-assignment-2.git
 Navigate to the project directory:
 
 ```bash
-cd your-project
+cd l2-assignment-2
 ```
 
 install dependencies:
@@ -58,26 +55,25 @@ install dependencies:
  npm install express mongoose zod
 ```
 
-# or
+### Configuration
 
-yarn install
-Configuration
 Configure your environment variables:
 
 1. Create a .env file in the project root.
 2. Add the required environment variables (e.g., MongoDB connection URI).
 
-Running the Project
+### Running the Project
+
 Run the development server:
 
-npm run dev
+```bash
+npm run dev:start
+```
 
-# or
-
-yarn dev
 The server will be running at http://localhost:5000 by default.
 
-Project Structure
+### Project Structure
+
 Explain the structure of your project directory. For example:
 
 ```
@@ -85,54 +81,54 @@ Explain the structure of your project directory. For example:
 ├── src/
 │   ├── app/
 │   │   ├── config/
-│   │   │   ├── database.ts
-│   │   │   ├── env.ts
-│   │   ── server.ts
-│   │
-│   ├── modules/
-│   │   ├── user/
-│   │   │   ├── controllers/
-│   │   │   │   ├── UserController.ts
-│   │   │   ├── models/
-│   │   │   │   ├── User.ts
-│   │   │   ├── routes/
-│   │   │   │   ├── userRoutes.ts
-│   │   │   ├── services/
-│   │   │   │   ├── UserService.ts
-│   │   │   └── index.ts
+│   │   │   ├── index.ts
+│   │   ├── modules/
+│   │   │   ├── user/
+│   │   │   │   ├── user.controller.ts
+│   │   │   │   ├── user.interface.ts
+│   │   │   │   ├── user.model.ts
+│   │   │   │   ├── user.route.ts
+│   │   │   │   ├── user.service.ts
+│   │   │   │   ├── user.zod.validation.ts
+│   │   │   │   │
+│   ├── app.ts
+│   ├── server.ts
 ├── .env
+├── .eslintignore
+├── .eslintrc.json
 ├── .gitignore
+├── .prettierignore
+├── .prettierrc.json
 ├── package.json
+├── process.env.d.ts
+├── README.MD
 ├── tsconfig.json
-├── yarn.lock
-└── README.md
+└── vercel.json
+```
 
+### Usage
+
+After cloning the project, start the project at local server on port 5000 (default port 5000)
+
+## API Documentation Endpoint
+
+```bash
+POST /api/users - Create a new user
+
+GET /api/users - Retrieve a list of all users
+
+GET /api/users/:userId - Retrieve a specific user by ID
+
+PUT /api/users/:userId - Update user information
+
+DELETE /api/users/:userId - Delete a user
+
+PUT /api/users/:userId/orders - Add New Product in Order
+
+GET /api/users/:userId/orders - Retrieve all orders for a specific user
+
+GET /api/users/:userId/orders/total-price - Calculate Total Price of Orders for a Specific User
 
 ```
 
-Usage
-Explain how to use your project, provide code examples, or describe the expected workflow.
-
-API Documentation
-Document your API routes, request/response examples, etc.
-
-Testing
-Explain how to run tests and provide examples if applicable.
-
-bash
-Copy code
-npm run test
-
-# or
-
-yarn test
-Contributing
-Explain how others can contribute to your project.
-
-License
-This project is licensed under the MIT License.
-
-vbnet
-Copy code
-
-Make sure to replace placeholders like `your-project`, `your-username`, and update the content according to your specific project details. Customize the sections based on your project's requirements and provide more detailed instructions where needed.
+Make sure to add data in the body to update or create user or any required data when requesting something with the Endpoints
